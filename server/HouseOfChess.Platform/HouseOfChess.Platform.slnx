@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/HouseOfChess.Platform.Packages/" />
+  <Folder Name="/HouseOfChess.Platform.Packages/ChessEngine/">
+    <Project Path="HouseOfChess.Platform.Packages/ChessEngine/HouseOfChess.Platform.Packages.ChessEngine.csproj" />
+  </Folder>
+  <Project Path="HouseOfChess.Platform.Infrastructure/HouseOfChess.Platform.Infrastructure.csproj" />
+  <Project Path="HouseOfChess.Platform.Repositories/HouseOfChess.Platform.Repositories.csproj" />
+  <Project Path="HouseOfChess.Platform.Services/HouseOfChess.Platform.Services.csproj" />
+  <Project Path="HouseOfChess.Platform.Tests/HouseOfChess.Platform.Tests.csproj" />
+  <Project Path="HouseOfChess.Platform.WebAPI/HouseOfChess.Platform.WebAPI.csproj" />
+</Solution>

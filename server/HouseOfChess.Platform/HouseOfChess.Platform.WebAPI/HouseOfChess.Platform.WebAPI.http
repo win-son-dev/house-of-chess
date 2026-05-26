@@ -1,0 +1,6 @@
+@HouseOfChess.Platform.WebAPI_HostAddress = http://localhost:5122
+
+GET {{HouseOfChess.Platform.WebAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
