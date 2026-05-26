@@ -27,5 +27,9 @@ public class ChessEngineTests
         var board = new ChessBoard();
 
         Assert.Equal(20, board.Moves().Length);
+        Assert.False(board.IsEndGame);
+        Assert.Null(board.EndGame);
     }
 }
+
+
