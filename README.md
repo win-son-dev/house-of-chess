@@ -36,6 +36,16 @@ cd docker && docker compose up --build
 
 The compose setup runs **two API replicas behind nginx** to exercise the stateless SignalR + Redis backplane topology — that's the whole point.
 
+### Verify the compose stack
+
+`docker/verify.sh` cold-boots the stack, probes `/api/games/ping` through the nginx LB 20 times, and asserts that **both** `api1` and `api2` served traffic. Use this after editing `docker-compose.yml`, `nginx.conf`, or either Dockerfile.
+
+```bash
+bash docker/verify.sh
+```
+
+Exit 0 means the stack boots clean and the LB distributes across both replicas.
+
 ## Architecture notes
 
 - **Server-authoritative gameplay.** The client renders and proposes moves; the server validates against `HouseOfChess.Platform.Packages.ChessEngine` and updates clocks. Bad moves are rejected, never trusted from the client.

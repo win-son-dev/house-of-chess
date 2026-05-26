@@ -35,12 +35,12 @@ The monorepo, layered .NET solution, React app, Docker compose, CI. Everything e
 - [x] 1.3.3 (BE) `AddOptions<T>().Bind().Validate().ValidateOnStart()` for fail-fast misconfig
 - [x] 1.3.4 (BE) Defer JWT / Redis backplane / CORS / DbContext via `IConfigureOptions` + factory delegates
 
-### Story 1.4 ([#20](https://github.com/win-son-dev/house-of-chess/issues/20)) — Docker setup 🔄
+### Story 1.4 ([#20](https://github.com/win-son-dev/house-of-chess/issues/20)) — Docker setup ✅
 - [x] 1.4.1 (Ops) `api.Dockerfile` multi-stage + `apt-get install stockfish`
 - [x] 1.4.2 (Ops) `web.Dockerfile` multi-stage (Node build → nginx static)
-- [x] 1.4.3 (Ops) `nginx.conf` LB with WebSocket upgrade for `/hubs/*`
-- [x] 1.4.4 (Ops) `docker-compose.yml` with postgres + redis + api1 + api2 + web + healthchecks
-- [ ] 1.4.5 (Ops) **Verify** `docker compose up --build` boots end-to-end on a clean machine, both API replicas reachable, web → api1/api2 via nginx LB
+- [x] 1.4.3 (Ops) `nginx.conf` LB with WebSocket upgrade for `/hubs/*` + upstream-aware log format
+- [x] 1.4.4 (Ops) `docker-compose.yml` with postgres + redis + api1 + api2 + web + healthchecks (incl. api1/api2 `/health` curl-probe; `web` depends on both being `service_healthy`)
+- [x] 1.4.5 (Ops) `docker/verify.sh` cold-boots the stack and asserts both API replicas serve traffic via nginx
 
 ### Story 1.5 ([#21](https://github.com/win-son-dev/house-of-chess/issues/21)) — CI workflow 🔄
 - [x] 1.5.1 (Ops) `.github/workflows/ci.yml` parallel server + web jobs
