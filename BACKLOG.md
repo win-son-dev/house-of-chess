@@ -100,10 +100,10 @@ Users sign in via Auth0. On first login the SPA calls `POST /api/account/onboard
 - [x] 3.1.2 (BE) `EngineGameResult` enum (WhiteWin / BlackWin / Draw)
 - [x] 3.1.3 (BE) Auto-endgame rules (checkmate, stalemate, insufficient material, 50-move, 3-fold) enabled via `AutoEndgameRules.All`
 
-### Story 3.2 ([#29](https://github.com/win-son-dev/house-of-chess/issues/29)) — PGN export ⏳
-- [ ] 3.2.1 (BE) `IPgnExportService` in Infrastructure; `PgnExportService` in Services that builds PGN from a `Game` + its ordered `GameMove` list (tags: White/Black/Result/Date/TimeControl)
-- [ ] 3.2.2 (BE) On game finish, populate `Game.Pgn` (currently never written)
-- [ ] 3.2.3 (BE) Unit tests against a known scholar's-mate / fool's-mate sequence
+### Story 3.2 ([#29](https://github.com/win-son-dev/house-of-chess/issues/29)) — PGN export ✅
+- [x] 3.2.1 (BE) `IPgnExportService` in Infrastructure; `PgnExportService` in Services that builds PGN from a `Game` + its ordered `GameMove` list (tags: White/Black/Result/Date/TimeControl)
+- [x] 3.2.2 (BE) On game finish, populate `Game.Pgn`
+- [x] 3.2.3 (BE) Unit tests against a known scholar's-mate / fool's-mate sequence
 
 ### Story 3.3 ([#30](https://github.com/win-son-dev/house-of-chess/issues/30)) — Wrapper tests ⏳
 - [ ] 3.3.1 (BE) Starting position: legal move count = 20, no result

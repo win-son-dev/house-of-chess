@@ -1,5 +1,5 @@
-using System.Text;
 using HouseOfChess.Platform.Infrastructure.Contracts.Game;
+using HouseOfChess.Platform.Infrastructure.Contracts.PgnExport;
 using HouseOfChess.Platform.Infrastructure.Repositories;
 using HouseOfChess.Platform.Repositories.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -49,16 +49,21 @@ public sealed class GameRepository(ApplicationDbContext db) : IGameRepository
         return new GameSnapshot(game.Id, game.WhiteUserId, game.BlackUserId, game.TimeControl, game.Result, moves);
     }
 
-    public async Task AppendMoveAsync(Guid gameId, int ply, string san, string uci, CancellationToken ct = default)
+    public async Task<PgnExportInputs?> GetPgnExportInputsAsync(Guid gameId, string result, CancellationToken ct = default)
     {
-        db.GameMoves.Add(new GameMove { GameId = gameId, Ply = ply, San = san, Uci = uci });
-        await db.SaveChangesAsync(ct);
-    }
-
-    public async Task FinishAsync(Guid gameId, string result, CancellationToken ct = default)
-    {
-        var game = await db.Games.FirstOrDefaultAsync(g => g.Id == gameId, ct)
-            ?? throw new InvalidOperationException($"Game {gameId} not found");
+        var game = await db.Games
+            .Where(g => g.Id == gameId)
+            .Join(db.Users, g => g.WhiteUserId, u => u.Id, (g, w) => new { Game = g, WhiteUsername = w.Username })
+            .Join(db.Users, x => x.Game.BlackUserId, u => u.Id,
+                (x, b) => new
+                {
+                    x.WhiteUsername,
+                    BlackUsername = b.Username,
+                    x.Game.TimeControl,
+                    x.Game.StartedAt
+                })
+            .SingleOrDefaultAsync(ct);
+        if (game is null) return null;
 
         var sans = await db.GameMoves
             .Where(m => m.GameId == gameId)
@@ -66,21 +71,29 @@ public sealed class GameRepository(ApplicationDbContext db) : IGameRepository
             .Select(m => m.San)
             .ToListAsync(ct);
 
-        game.Result = result;
-        game.Pgn = BuildPgn(sans, result);
-        game.EndedAt = DateTime.UtcNow;
+        return new PgnExportInputs(
+            game.WhiteUsername,
+            game.BlackUsername,
+            game.TimeControl,
+            game.StartedAt,
+            result,
+            sans);
+    }
+
+    public async Task AppendMoveAsync(Guid gameId, int ply, string san, string uci, CancellationToken ct = default)
+    {
+        db.GameMoves.Add(new GameMove { GameId = gameId, Ply = ply, San = san, Uci = uci });
         await db.SaveChangesAsync(ct);
     }
 
-    private static string BuildPgn(IReadOnlyList<string> sans, string result)
+    public async Task FinishAsync(Guid gameId, string result, string pgn, CancellationToken ct = default)
     {
-        var sb = new StringBuilder();
-        for (var i = 0; i < sans.Count; i++)
-        {
-            if (i % 2 == 0) sb.Append((i / 2) + 1).Append(". ");
-            sb.Append(sans[i]).Append(' ');
-        }
-        sb.Append(result);
-        return sb.ToString();
+        var game = await db.Games.FirstOrDefaultAsync(g => g.Id == gameId, ct)
+            ?? throw new InvalidOperationException($"Game {gameId} not found");
+
+        game.Result = result;
+        game.Pgn = pgn;
+        game.EndedAt = DateTime.UtcNow;
+        await db.SaveChangesAsync(ct);
     }
 }

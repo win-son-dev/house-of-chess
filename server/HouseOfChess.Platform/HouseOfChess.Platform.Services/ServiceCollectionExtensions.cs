@@ -5,12 +5,14 @@ using HouseOfChess.Platform.Infrastructure.Services.AntiCheat;
 using HouseOfChess.Platform.Infrastructure.Services.Engine;
 using HouseOfChess.Platform.Infrastructure.Services.Game;
 using HouseOfChess.Platform.Infrastructure.Services.Matchmaking;
+using HouseOfChess.Platform.Infrastructure.Services.PgnExport;
 using HouseOfChess.Platform.Infrastructure.Services.Rating;
 using HouseOfChess.Platform.Services.Account;
 using HouseOfChess.Platform.Services.AntiCheat;
 using HouseOfChess.Platform.Services.Engine;
 using HouseOfChess.Platform.Services.Game;
 using HouseOfChess.Platform.Services.Matchmaking;
+using HouseOfChess.Platform.Services.PgnExport;
 using HouseOfChess.Platform.Services.Rating;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -53,12 +55,17 @@ public static class ServiceCollectionExtensions
             .Validate(o => !string.IsNullOrWhiteSpace(o.Pattern), "Username Pattern not set")
             .ValidateOnStart();
 
+        services.AddOptions<PgnExportOptions>()
+            .Bind(configuration.GetSection(ConfigSections.PgnExport))
+            .ValidateOnStart();
+
         services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<IGameService, GameService>();
         services.AddSingleton<IMatchmakingService, MatchmakingService>();
         services.AddSingleton<IRatingService, EloRatingService>();
         services.AddScoped<IAntiCheatService, AntiCheatService>();
         services.AddSingleton<IStockfishService, StockfishService>();
+        services.AddSingleton<IPgnExportService, PgnExportService>();
 
         return services;
     }

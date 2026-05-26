@@ -8,4 +8,5 @@ public static class ConfigSections
     public const string Cors = "Cors";
     public const string ConnectionStrings = "ConnectionStrings";
     public const string Username = "Username";
+    public const string PgnExport = "PgnExport";
 }
