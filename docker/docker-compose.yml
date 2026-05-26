@@ -38,6 +38,12 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+    healthcheck: &api-health
+      test: ["CMD", "curl", "-fsS", "http://localhost:8080/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 30s
 
   api2:
     build:
@@ -50,6 +56,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+    healthcheck:
+      <<: *api-health
 
   web:
     build:
@@ -63,8 +71,10 @@ services:
     ports:
       - "8080:80"
     depends_on:
-      - api1
-      - api2
+      api1:
+        condition: service_healthy
+      api2:
+        condition: service_healthy
 
 volumes:
   postgres-data:
