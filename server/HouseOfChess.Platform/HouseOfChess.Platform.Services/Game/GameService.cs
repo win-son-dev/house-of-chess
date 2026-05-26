@@ -1,13 +1,15 @@
 using HouseOfChess.Platform.Infrastructure.Contracts.Game;
 using HouseOfChess.Platform.Infrastructure.Repositories;
 using HouseOfChess.Platform.Infrastructure.Services.Game;
+using HouseOfChess.Platform.Infrastructure.Services.PgnExport;
 using HouseOfChess.Platform.Packages.ChessEngine;
 
 namespace HouseOfChess.Platform.Services.Game;
 
 public sealed class GameService(
     IGameRepository games,
-    IGameStateRepository state) : IGameService
+    IGameStateRepository state,
+    IPgnExportService pgnExport) : IGameService
 {
     public async Task<MoveResult> SubmitMoveAsync(Guid gameId, Guid userId, MoveRequest move, CancellationToken ct = default)
     {
@@ -34,7 +36,11 @@ public sealed class GameService(
         var finalResult = MapResult(outcome.FinalResult);
         if (finalResult.HasValue)
         {
-            await games.FinishAsync(gameId, ResultToken(finalResult.Value), ct);
+            var resultToken = ResultToken(finalResult.Value);
+            var inputs = await games.GetPgnExportInputsAsync(gameId, resultToken, ct)
+                ?? throw new InvalidOperationException($"Game {gameId} disappeared mid-finish");
+            var pgn = pgnExport.Build(inputs);
+            await games.FinishAsync(gameId, resultToken, pgn, ct);
         }
 
         return new MoveResult(true, null, outcome.NewFen, outcome.San, move.Uci, finalResult);
