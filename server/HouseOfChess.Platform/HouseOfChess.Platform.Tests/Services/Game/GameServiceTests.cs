@@ -122,4 +122,20 @@ public class GameServiceTests
         pgn.Received(1).Build(Arg.Any<PgnExportInputs>());
         await games.Received(1).FinishAsync(GameId, "0-1", "stub-pgn", Arg.Any<CancellationToken>());
     }
+
+    [Fact]
+    public async Task SubmitMove_CheckmateMove_GameDisappearedMidFinish_ThrowsInvalidOperationException()
+    {
+        // Arrange
+        const string beforeMate = "rnbqkbnr/pppp1ppp/8/4p3/6P1/5P2/PPPPP2P/RNBQKBNR b KQkq g3 0 2";
+        var (sut, games, _, _) = Build(summary: FreshSummary(moveCount: 3), fen: beforeMate);
+        
+        games.GetPgnExportInputsAsync(GameId, Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .Returns((PgnExportInputs?)null);
+
+        // Act & Assert
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            sut.SubmitMoveAsync(GameId, Black, new MoveRequest("d8h4"), CancellationToken.None));
+    }
 }
+

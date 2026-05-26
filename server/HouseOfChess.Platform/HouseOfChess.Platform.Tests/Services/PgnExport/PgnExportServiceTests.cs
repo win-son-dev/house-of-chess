@@ -99,6 +99,29 @@ public class PgnExportServiceTests
     }
 
     [Fact]
+    public void Build_TimeControl_NoIncrement_PassedThroughVerbatim()
+    {
+        var sut = Build();
+        var inputs = Inputs("1-0", ["e4"], timeControl: "5");
+
+        var pgn = sut.Build(inputs);
+
+        Assert.Contains("[TimeControl \"5\"]", pgn);
+    }
+
+    [Fact]
+    public void Build_TimeControl_NonNumericMinutes_PassedThroughVerbatim()
+    {
+        var sut = Build();
+        var inputs = Inputs("1-0", ["e4"], timeControl: "five+0");
+
+        var pgn = sut.Build(inputs);
+
+        Assert.Contains("[TimeControl \"five+0\"]", pgn);
+    }
+
+
+    [Fact]
     public void Build_DateTag_FormattedAsYyyyDotMmDotDd()
     {
         var sut = Build();
