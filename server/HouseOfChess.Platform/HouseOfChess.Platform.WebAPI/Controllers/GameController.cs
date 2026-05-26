@@ -11,7 +11,6 @@ namespace HouseOfChess.Platform.WebAPI.Controllers;
 public sealed class GameController(IGameRepository games) : ControllerBase
 {
     [HttpGet("ping")]
-    [AllowAnonymous]
     public IActionResult Ping() => Ok(new { ok = true });
 
     [HttpGet("{id:guid}")]
