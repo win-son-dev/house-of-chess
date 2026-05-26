@@ -105,13 +105,14 @@ Users sign in via Auth0. On first login the SPA calls `POST /api/account/onboard
 - [x] 3.2.2 (BE) On game finish, populate `Game.Pgn`
 - [x] 3.2.3 (BE) Unit tests against a known scholar's-mate / fool's-mate sequence
 
-### Story 3.3 ([#30](https://github.com/win-son-dev/house-of-chess/issues/30)) — Wrapper tests ⏳
-- [ ] 3.3.1 (BE) Starting position: legal move count = 20, no result
-- [ ] 3.3.2 (BE) Scholar's mate (1.e4 e5 2.Bc4 Nc6 3.Qh5 Nf6?? 4.Qxf7#) → `EngineGameResult.WhiteWin`
-- [ ] 3.3.3 (BE) Fool's mate (1.f3 e5 2.g4 Qh4#) → `EngineGameResult.BlackWin`
-- [ ] 3.3.4 (BE) Illegal move (`e2e5`) → `Accepted=false`, RejectionReason populated
-- [ ] 3.3.5 (BE) Threefold repetition reached → Draw
-- [ ] 3.3.6 (BE) Promotion UCI (`e7e8q`) accepted, SAN includes `=Q`
+### Story 3.3 ([#30](https://github.com/win-son-dev/house-of-chess/issues/30)) — Wrapper tests ✅
+- [x] 3.3.1 (BE) Starting position: legal move count = 20, no result
+- [x] 3.3.2 (BE) Scholar's mate (1.e4 e5 2.Bc4 Nc6 3.Qh5 Nf6?? 4.Qxf7#) → `EngineGameResult.WhiteWin`
+- [x] 3.3.3 (BE) Fool's mate (1.f3 e5 2.g4 Qh4#) → `EngineGameResult.BlackWin`
+- [x] 3.3.4 (BE) Illegal move (`e2e5`) → `Accepted=false`, RejectionReason populated
+- [x] 3.3.5 (BE) Threefold repetition reached → Draw
+- [x] 3.3.6 (BE) Promotion UCI (`e7e8q`) accepted, SAN includes `=Q`
+
 
 ---
 
